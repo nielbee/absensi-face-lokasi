@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">absensi</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Absensi</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_login">Login</string>
+    <string name="title_register">Register</string>
+    <string name="nisn">NISN</string>
+    <string name="forget_password">Forget Password</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+</resources>

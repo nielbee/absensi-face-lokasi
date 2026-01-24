@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<resources>-->
+<!--    <item name="imgLogo" type="id">imgLogo</item>-->
+<!--    <item name="txtTitle" type="id">textTitle</item>-->
+<!--    <item name="txtSubtitle" type="id">txtSubtitle</item>-->
+<!--    <item name="inputNisn" type="id">inputNisn</item>-->
+<!--    <item name="edtNisn" type="id">editNisn</item>-->
+<!--</resources>-->
+
+<resources>
+<item name="imgLogo" type="id"/>
+<item name="txtTitle" type="id"/>
+<item name="txtSubtitle" type="id"/>
+<item name="inputNisn" type="id"/>
+<item name="edtNisn" type="id"/>
+</resources>
