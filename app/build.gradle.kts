@@ -31,7 +31,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-
+    aaptOptions {
+        noCompress ("onnx")
+    }
     buildFeatures {
         viewBinding = true
     }
@@ -92,7 +94,9 @@ dependencies {
     // TensorFlow Lite (WAJIB untuk MobileFaceNet)
     implementation("org.tensorflow:tensorflow-lite:2.14.0")
 // Opsional (lebih cepat, boleh ditambahkan nanti)
+
     implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
 
+    implementation("com.microsoft.onnxruntime:onnxruntime-android:1.17.0")
 
 }

@@ -1,6 +1,7 @@
 package com.example.absensi.ui.face.analyzer
 
 import android.content.Context
+import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.google.mlkit.vision.common.InputImage
@@ -17,55 +18,46 @@ class FaceAnalyzer(
     private var lastBlink = false
     private var state = LivenessState.WAIT_FACE
     private val finished = AtomicBoolean(false)
-
-    // ✅ INIT DI SINI
     private val extractor = EmbeddingExtractor(context)
 
     private val detector = FaceDetection.getClient(
         FaceDetectorOptions.Builder()
             .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
             .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
-            .enableTracking()
             .build()
     )
 
+    // ✅ FUNGSI RESET: Penting agar bisa digunakan kembali jika absen gagal
+    fun reset() {
+        finished.set(false)
+        state = LivenessState.WAIT_FACE
+        blinkCount = 0
+        lastBlink = false
+        onStatus("Mencari wajah...")
+    }
+
+    @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
     override fun analyze(imageProxy: ImageProxy) {
+        // Jika sudah selesai dan belum di-reset, jangan proses frame baru
         if (finished.get()) {
             imageProxy.close()
             return
         }
 
-        val mediaImage = imageProxy.image ?: run {
-            imageProxy.close(); return
-        }
-
-        val image = InputImage.fromMediaImage(
-            mediaImage,
-            imageProxy.imageInfo.rotationDegrees
-        )
+        val mediaImage = imageProxy.image ?: run { imageProxy.close(); return }
+        val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
 
         detector.process(image)
             .addOnSuccessListener { faces ->
-
                 if (faces.isEmpty()) {
                     onStatus("❌ Wajah tidak terdeteksi")
                     return@addOnSuccessListener
                 }
 
-                if (faces.size > 1) {
-                    onStatus("❌ Pastikan hanya 1 wajah")
-                    return@addOnSuccessListener
-                }
-
                 val face = faces.first()
-
+                Log.d("FACE_DEBUG", "Blink: ${face.leftEyeOpenProbability}, Smile: ${face.smilingProbability}")
                 if (!FaceUtils.isFacingCamera(face)) {
                     onStatus("❌ Hadap ke kamera")
-                    return@addOnSuccessListener
-                }
-
-                if (!FaceUtils.isFaceCloseEnough(face)) {
-                    onStatus("❌ Dekatkan wajah")
                     return@addOnSuccessListener
                 }
 
@@ -76,18 +68,15 @@ class FaceAnalyzer(
 
                     LivenessState.WAIT_BLINK -> {
                         val blink = FaceUtils.isBlinking(face)
-
                         if (blink && !lastBlink) {
                             blinkCount++
                             lastBlink = true
                         }
                         if (!blink) lastBlink = false
 
-                        onStatus("👁 Kedip mata 2x ($blinkCount/2)")
+                        onStatus("👁 Kedip mata ($blinkCount/2)")
 
-                        if (blinkCount >= 2) {
-                            state = LivenessState.WAIT_SMILE
-                        }
+                        if (blinkCount >= 2) state = LivenessState.WAIT_SMILE
                     }
 
                     LivenessState.WAIT_SMILE -> {
@@ -99,13 +88,16 @@ class FaceAnalyzer(
                     }
 
                     LivenessState.COMPLETED -> {
-                        finished.set(true)
-                        onStatus("📸 Wajah berhasil direkam")
+                        // Kunci analyzer agar tidak mengambil gambar berkali-kali
+                        if (finished.compareAndSet(false, true)) {
+                            onStatus("📸 Mengambil data wajah...")
 
-                        val bitmap = FaceUtils.toBitmap(imageProxy)
-                        val embedding = extractor.extract(bitmap)
+                            val fullBitmap = FaceUtils.toBitmap(imageProxy)
+                            val faceBitmap = FaceUtils.cropFace(fullBitmap, face)
+                            val embedding = extractor.extract(faceBitmap)
 
-                        onCompleted(embedding)
+                            onCompleted(embedding)
+                        }
                     }
                 }
             }
@@ -114,5 +106,3 @@ class FaceAnalyzer(
             }
     }
 }
-
-

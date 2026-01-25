@@ -9,7 +9,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.channels.FileChannel
 
-class EmbeddingExtractor(context: Context) {
+class EmbeddingExtractorxyz(context: Context) {
 
     private val interpreter: Interpreter
 

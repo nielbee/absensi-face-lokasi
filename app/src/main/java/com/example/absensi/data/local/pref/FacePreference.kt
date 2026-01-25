@@ -1,22 +1,16 @@
 package com.example.absensi.data.local.pref
 
 import android.content.Context
+import android.util.Log
 import kotlin.math.sqrt
 
 class FacePreference(context: Context) {
 
-    private val prefs =
-        context.getSharedPreferences("face_pref", Context.MODE_PRIVATE)
+    private val prefs = context.getSharedPreferences("face_pref", Context.MODE_PRIVATE)
 
     fun saveFace(nisn: String, data: FloatArray) {
         val stringData = data.joinToString(",")
-        prefs.edit()
-            .putString("face_$nisn", stringData)
-            .apply()
-    }
-
-    fun hasFace(nisn: String): Boolean {
-        return prefs.contains("face_$nisn")
+        prefs.edit().putString("face_$nisn", stringData).apply()
     }
 
     fun getFace(nisn: String): FloatArray? {
@@ -24,17 +18,29 @@ class FacePreference(context: Context) {
         return data.split(",").map { it.toFloat() }.toFloatArray()
     }
 
-    fun isFaceMatch(
-        emb1: FloatArray,
-        emb2: FloatArray,
-        threshold: Float = 0.9f
-    ): Boolean {
-        var sum = 0f
+    // Fungsi baru untuk mengambil nilai ANGKA skor
+    fun calculateSimilarity(emb1: FloatArray, emb2: FloatArray): Float {
+        if (emb1.size != emb2.size) return 0f
+
+        var dotProduct = 0.0f
+        var normA = 0.0f
+        var normB = 0.0f
+
         for (i in emb1.indices) {
-            val diff = emb1[i] - emb2[i]
-            sum += diff * diff
+            dotProduct += emb1[i] * emb2[i]
+            normA += emb1[i] * emb1[i]
+            normB += emb2[i] * emb2[i]
         }
-        val distance = sqrt(sum)
-        return distance < threshold
+
+        val denominator = sqrt(normA.toDouble()) * sqrt(normB.toDouble())
+        if (denominator <= 0.0) return 0f
+
+        return (dotProduct / denominator).toFloat()
+    }
+
+    // Gunakan threshold yang lebih fleksibel (default 0.45)
+    fun isFaceMatch(emb1: FloatArray, emb2: FloatArray, threshold: Float = 0.45f): Boolean {
+        val similarity = calculateSimilarity(emb1, emb2)
+        return similarity >= threshold
     }
 }

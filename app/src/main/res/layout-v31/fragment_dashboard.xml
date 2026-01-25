@@ -1,65 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- MAP BACKGROUND -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/mapFragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- DARK OVERLAY agar UI lebih kontras -->
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#33000000" />
+        android:background="#44000000" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginBottom="30dp"
+        android:padding="24dp">
 
-    <!-- CAMERA PREVIEW BUNDLED DENGAN FRAME LINGKARAN -->
+        <Button
+            android:id="@+id/tvStatus"
+            android:layout_width="match_parent"
+            android:layout_marginTop="50dp"
+            android:layout_height="56dp"
+            android:text="Mencari Wajah . . . "
+            android:backgroundTint="@color/teal_200"
+            android:textColor="@android:color/white"
+            android:enabled="false" />
+    </LinearLayout>
+
     <FrameLayout
         android:id="@+id/cameraCircle"
-        android:layout_width="251dp"
-        android:layout_height="251dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_gravity="center"
-        android:clipToOutline="true"
-        android:layout_marginBottom="100dp"
-        android:outlineProvider="background"
+        android:layout_marginBottom="80dp"
         android:background="@drawable/bg_camera_circle"
-        android:elevation="8dp">
+        android:clipToOutline="true"
+        android:outlineProvider="background"
+        android:elevation="4dp">
 
         <androidx.camera.view.PreviewView
             android:id="@+id/previewView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitCenter" />
+            app:scaleType="fillCenter" />
     </FrameLayout>
 
-    <!-- CAMERA ICON Overlay -->
-    <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_camera"
-        android:layout_marginBottom="100dp"
-        android:backgroundTint="@color/white" />
-
-    <!-- BOTTOM ACTION (Tombol ABSEN) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="100dp"
-        android:padding="24dp"
-        android:gravity="center">
+        android:layout_marginBottom="110dp"
+        android:padding="16dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
 
         <Button
-            android:id="@+id/btnAbsen"
-            android:layout_width="match_parent"
+            android:id="@+id/btnAbsenDatang"
+            android:layout_width="0dp"
             android:layout_height="56dp"
-            android:text="ABSEN SEKARANG"
-            android:textSize="16sp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="DATANG"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:backgroundTint="@color/teal_200"
+            android:textColor="@android:color/white"
+            android:enabled="false" />
+
+        <Button
+            android:id="@+id/btnAbsenPulang"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="PULANG"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:backgroundTint="@color/teal_200"
             android:textColor="@android:color/white"
