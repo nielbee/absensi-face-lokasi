@@ -8,13 +8,14 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.absensi.databinding.FragmentNotificationsBinding
+import com.example.absensi.data.local.UserPreference
+
+
+
 
 class NotificationsFragment : Fragment() {
 
     private var _binding: FragmentNotificationsBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -22,17 +23,32 @@ class NotificationsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val notificationsViewModel =
-            ViewModelProvider(this).get(NotificationsViewModel::class.java)
-
         _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
-        val textView: TextView = binding.textNotifications
-        notificationsViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        // 1️⃣ Buat UserPreference dengan context
+        val prefs = UserPreference(requireContext())
+
+        // 2️⃣ Buat Factory
+        val factory = NotificationsViewModelFactory(prefs)
+
+        // 3️⃣ Buat ViewModel via Factory
+        val viewModel = ViewModelProvider(this, factory)
+            .get(NotificationsViewModel::class.java)
+
+        // 4️⃣ Observe LiveData
+        viewModel.studentName.observe(viewLifecycleOwner) {
+            binding.textStudentName.text = it
         }
-        return root
+
+        viewModel.studentNisn.observe(viewLifecycleOwner) {
+            binding.textStudentNisn.text = it
+        }
+        viewModel.studentClas.observe(viewLifecycleOwner) {
+            binding.textStudentClas.text = it
+        }
+
+
+        return binding.root
     }
 
     override fun onDestroyView() {
