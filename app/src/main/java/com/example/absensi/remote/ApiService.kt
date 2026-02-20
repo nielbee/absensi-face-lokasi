@@ -8,27 +8,27 @@ import retrofit2.http.Path
 // import ret
 interface ApiService {
 
-    @POST("verifikasi/{nisn}")
+    @POST("verifikasi/{id_guru}")
     suspend fun verifikasi(
-        @Path("nisn") nisn: String,
+        @Path("id_guru") id_guru: String,
         @Body body: Map<String, String>
     ): VerifikasiResponse
 
-    @POST("login/{nisn}")
+    @POST("login/{id_guru}")
     suspend fun login(
-        @Path("nisn") nisn: String,
+        @Path("id_guru") id_guru: String,
         @Body body: Map<String, String>
     ): LoginResponse
 
-    @POST("datang/{nisn}")
+    @POST("datang/{id_guru}")
     suspend fun absenDatang(
-        @Path("nisn") nisn: String,
+        @Path("id_guru") id_guru: String,
         @Body body: Map<String, String>
     ):Response<AbsensiResponse>
 
-    @POST("pulang/{nisn}")
+    @POST("pulang/{id_guru}")
     suspend fun absenPulang(
-        @Path("nisn") nisn: String,
+        @Path("id_guru") id_guru: String,
         @Body body: Map<String, String>
     ): Response<AbsensiResponse>
 }

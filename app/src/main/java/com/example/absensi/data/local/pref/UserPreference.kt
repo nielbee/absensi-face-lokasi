@@ -18,10 +18,8 @@ class UserPreference(context: Context) {
     }
     fun saveVerifikasi(data: VerifikasiResponse) {
         prefs.edit()
-            .putString("nisn", data.nisn)
+            .putString("id_guru", data.id_guru)
             .putString("nama", data.nama)
-            .putString("id_jurusan", data.id_jurusan)
-            .putInt("tahun_masuk", data.tahun_masuk)
             .apply()
     }
 

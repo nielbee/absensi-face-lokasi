@@ -29,10 +29,9 @@ class VerifikasiDialog(
             "Nama : ${data.nama}"
 
         view.findViewById<TextView>(R.id.txtNisn).text =
-            "NISN : ${data.nisn}"
+            "ID GTK : ${data.id_guru}"
 
-        view.findViewById<TextView>(R.id.txtJurusan).text =
-            "Jurusan : ${data.id_jurusan}"
+
 
         view.findViewById<Button>(R.id.btnOk).setOnClickListener {
             dialog.dismiss()

@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.Lifecycle
-import com.example.absensi.MainActivity
 import com.example.absensi.data.local.UserPreference
 import com.example.absensi.databinding.ActivityLoginBinding
 import com.example.absensi.remote.RetrofitClient
@@ -40,14 +39,14 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setupAction() {
         binding.btnLogin.setOnClickListener {
-            val nisn = binding.edtNisn.text.toString().trim()
+            val id = binding.edtId.text.toString().trim()
 
-            if (nisn.isEmpty()) {
-                Toast.makeText(this, "Masukkan NISN", Toast.LENGTH_SHORT).show()
+            if (id.isEmpty()) {
+                Toast.makeText(this, "Masukkan ID GTK", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            viewModel.verifikasiNisn(nisn)
+            viewModel.verifikasiId(id)
         }
     }
 

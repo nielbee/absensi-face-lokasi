@@ -12,5 +12,5 @@
 <item name="txtTitle" type="id"/>
 <item name="txtSubtitle" type="id"/>
 <item name="inputNisn" type="id"/>
-<item name="edtNisn" type="id"/>
+<item name="edtId" type="id"/>
 </resources>

@@ -16,15 +16,15 @@ class LoginViewModel(
 
     private val _state = MutableStateFlow(LoginState())
     val state: StateFlow<LoginState> = _state
-
-    fun verifikasiNisn(nisn: String) {
+    val appKey = "asdjsandkjasvfa"
+    fun verifikasiId(id: String) {
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true)
 
             try {
                 val data = api.verifikasi(
-                    nisn,
-                    mapOf("app_key" to "asdjsandkjasvfamd")
+                    id,
+                    mapOf("app_key" to appKey)
                 )
 
                 _state.value = LoginState(
@@ -36,7 +36,7 @@ class LoginViewModel(
             } catch (e: Exception) {
                 _state.value = LoginState(
                     isLoading = false,
-                    error = "Verifikasi gagal, cek koneksi atau NISN"
+                    error = "Verifikasi gagal, cek koneksi atau ID GTK"
                 )
             }
         }
@@ -48,8 +48,8 @@ class LoginViewModel(
         viewModelScope.launch {
             try {
                 val res = api.login(
-                    data.nisn,
-                    mapOf("app_key" to "asdjsandkjasvfamd")
+                    data.id_guru,
+                    mapOf("app_key" to appKey)
                 )
 
                 if (res.status == "berhasil") {
@@ -73,8 +73,8 @@ class LoginViewModel(
     ) {
         viewModelScope.launch {
             try {
-                val verifikasiData = api.verifikasi(nisn, mapOf("app_key" to "asdjsandkjasvfamd"))
-                val res = api.login(nisn, mapOf("app_key" to "asdjsandkjasvfamd"))
+                val verifikasiData = api.verifikasi(nisn, mapOf("app_key" to appKey))
+                val res = api.login(nisn, mapOf("app_key" to appKey))
 
                 if (res.status == "berhasil") {
                     pref.saveVerifikasi(verifikasiData)
