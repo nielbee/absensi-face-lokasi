@@ -34,9 +34,12 @@ class MainActivity : AppCompatActivity() {
             )
         )
         val nama = pref.getNama()
-        val nisn = pref.getNisn()
-        val jurusan = pref.getJurusan()
+        val id = pref.getId()
+
 //        setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
+
+
+
 }

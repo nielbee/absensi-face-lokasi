@@ -256,61 +256,6 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-//private suspend fun sendAbsen(isDatang: Boolean) {
-//    val location = try {
-//        fusedLocationClient.getCurrentLocationSuspend(requireContext())
-//    } catch (e: Exception) { null }
-//
-//    val lat = location?.latitude?.toString() ?: "0.0"
-//    val lng = location?.longitude?.toString() ?: "0.0"
-//    val nisn = userPref.getNisn()
-//    val apiKey = userPref.getApiKey()
-//
-//    val body = mapOf(
-//        "nisn" to nisn,
-//        "lat" to lat,
-//        "long" to lng,
-//        "app_key" to "asdjsandkjasvfamd",
-//        "token_key" to apiKey
-//    )
-//
-//    try {
-//        // Logika pemilihan endpoint
-//        val response = if (isDatang) {
-//            RetrofitClient.api.absenDatang(nisn, body)
-//        } else {
-//            RetrofitClient.api.absenPulang(nisn, body)
-//        }
-//
-//        if (response.isSuccessful && response.body() != null) {
-//            val res = response.body()
-//            Toast.makeText(requireContext(), res?.msg, Toast.LENGTH_SHORT).show()
-//
-//            if (res?.status == "berhasil") {
-//                // Reset flow setelah sukses
-//                isFaceMatched = false
-//                updateAbsenButton(false)
-//                faceAnalyzer?.reset()
-//                binding.tvStatus?.text = "Mencari Wajah..."
-//                binding.tvStatus?.setBackgroundResource(R.drawable.bg_status_badge)
-//            } else {
-//                faceAnalyzer?.reset()
-//            }
-//        } else {
-//            Toast.makeText(requireContext(), "Gagal: ${response.message()}", Toast.LENGTH_SHORT).show()
-//            faceAnalyzer?.reset()
-//        }
-//    } catch (e: Exception) {
-//        Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-//        faceAnalyzer?.reset()
-//    }
-//}
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        _binding = null
-//        cameraExecutor.shutdown()
-//    }
-//}
 
     private suspend fun sendAbsen(isDatang: Boolean) {
         val location = try {
@@ -318,6 +263,13 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
         } catch (e: Exception) {
             null
         }
+
+        // cek mock location :
+        if(location.isMock == true){
+            Toast.makeText(requireContext(), "Mock Location Detected", Toast.LENGTH_SHORT).show()
+            return
+        }
+
 
         val lat = location?.latitude?.toString() ?: "0.0"
         val lng = location?.longitude?.toString() ?: "0.0"

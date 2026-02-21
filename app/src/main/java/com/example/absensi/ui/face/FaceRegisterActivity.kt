@@ -61,7 +61,7 @@ private val requestCameraPermission = registerForActivityResult(
     facePref = FacePreference(this)
     loginViewModel = LoginViewModel(RetrofitClient.api, userPref)
 
-    checkCameraPermission() // ✅ WAJIB
+    checkCameraPermission() //  WAJIB
 }
 
     private fun startCamera() {
@@ -78,7 +78,7 @@ private val requestCameraPermission = registerForActivityResult(
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
 
-            // ✅ INI BAGIAN PALING PENTING
+            //  INI BAGIAN PALING PENTING
             imageAnalysis.setAnalyzer(
                 Executors.newSingleThreadExecutor(),
                 FaceAnalyzer(

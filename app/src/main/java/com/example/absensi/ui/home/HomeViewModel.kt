@@ -24,8 +24,8 @@ class HomeViewModel(
 
     fun loadUser(){
         _nama.value = pref.getNama()
-        _nisn.value = pref.getNisn()
-        _jurusan.value = pref.getJurusan()
+        _nisn.value = pref.getId()
+
 
     }
 

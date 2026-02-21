@@ -9,10 +9,9 @@ class UserPreference(context: Context) {
     private val prefs =
         context.getSharedPreferences("user_pref", Context.MODE_PRIVATE)
     companion object{
-        private const val nisn = "nisn"
+        private const val id_guru = "id_guru"
         private const val nama = "nama"
         private const val id_jurusan = "id_jurusan"
-        private const val tahun_masuk = "tahun_masuk"
 
         private const val api_key = "api_key"
     }
@@ -33,14 +32,13 @@ class UserPreference(context: Context) {
     fun isLogin(): Boolean =
         prefs.getBoolean("is_login", false)
 
-    fun getNisn():String =
-        prefs.getString(nisn, "")?:""
+    fun getId():String =
+        prefs.getString(id_guru, "")?:""
 
     fun getNama(): String =
         prefs.getString(nama, "" )?:""
 
-    fun getJurusan():String =
-        prefs.getString(id_jurusan, "")?:""
+
 
     fun getApiKey(): String =
         prefs.getString(api_key, "")?:""
