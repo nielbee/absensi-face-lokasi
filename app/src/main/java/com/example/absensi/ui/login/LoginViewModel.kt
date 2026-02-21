@@ -2,6 +2,8 @@ package com.example.absensi.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.absensi.BuildConfig as AppConf
+
 import com.example.absensi.data.local.UserPreference
 import com.example.absensi.remote.ApiService
 import com.example.absensi.remote.LoginResponse
@@ -16,7 +18,7 @@ class LoginViewModel(
 
     private val _state = MutableStateFlow(LoginState())
     val state: StateFlow<LoginState> = _state
-    val appKey = "asdjsandkjasvfa"
+    val appKey = AppConf.APP_KEY
     fun verifikasiId(id: String) {
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true)

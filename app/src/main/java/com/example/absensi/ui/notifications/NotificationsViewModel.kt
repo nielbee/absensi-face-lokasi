@@ -10,19 +10,19 @@ class NotificationsViewModel(
 ) : ViewModel() {
 
 
-    private val _studentName = MutableLiveData<String>()
-    private val _studentNisn = MutableLiveData<String>()
-    private val _studentClas = MutableLiveData<String>()
-    val studentName: LiveData<String> = _studentName
-    val studentNisn: LiveData<String> = _studentNisn
-    val studentClas: LiveData<String> = _studentClas
+    private val _name = MutableLiveData<String>()
+    private val _id = MutableLiveData<String>()
+
+    val name: LiveData<String> = _name
+    val id: LiveData<String> = _id
+
 
 
 
     init {
-        _studentName.value = prefs.getNama()
-        _studentNisn.value = prefs.getNisn()
-        _studentClas.value = prefs.getJurusan()
+        _name.value = prefs.getNama()
+        _id.value = prefs.getId()
+
 
     }
 }

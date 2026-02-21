@@ -1,15 +1,18 @@
 package com.example.absensi.ui.dashboard
 
+import ai.onnxruntime.BuildConfig
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
@@ -22,6 +25,7 @@ import com.example.absensi.data.local.pref.FacePreference
 import com.example.absensi.databinding.FragmentDashboardBinding
 import com.example.absensi.remote.RetrofitClient
 import com.example.absensi.ui.face.analyzer.FaceAnalyzer
+import com.example.absensi.BuildConfig as AppConf
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
@@ -57,6 +61,10 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
     private var isFaceMatched = false
     private var isLocationMatch = false
 
+
+//    val appKey = "asdjsandkjasvfa"  // need to access from secure place
+    val appKey = AppConf.APP_KEY
+
     companion object {
         private const val SEKOLAH_LAT = -8.47240444613784
         private const val SEKOLAH_LNG = 119.89182673243097
@@ -70,6 +78,7 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -193,8 +202,8 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun verifyFace(currentEmbedding: FloatArray) {
-        val nisn = userPref.getNisn()
-        val savedEmbedding = facePref.getFace(nisn)
+        val id = userPref.getId()
+        val savedEmbedding = facePref.getFace(id)
 
         if (savedEmbedding != null) {
             val score = facePref.calculateSimilarity(currentEmbedding, savedEmbedding)
@@ -219,7 +228,7 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
                 }
             }
         } else {
-            Log.e("FACE_SCORE", "Data wajah tidak ditemukan untuk NISN: $nisn")
+            Log.e("FACE_SCORE", "Data wajah tidak ditemukan untuk ID: $id")
         }
     }
 
@@ -240,6 +249,7 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun setupAbsenButton() {
         // Tombol Datang
         binding.btnAbsenDatang?.setOnClickListener {
@@ -257,6 +267,7 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.S)
     private suspend fun sendAbsen(isDatang: Boolean) {
         val location = try {
             fusedLocationClient.getCurrentLocationSuspend(requireContext())
@@ -265,7 +276,7 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
         }
 
         // cek mock location :
-        if(location.isMock == true){
+        if(location?.isMock == true){
             Toast.makeText(requireContext(), "Mock Location Detected", Toast.LENGTH_SHORT).show()
             return
         }
@@ -273,23 +284,23 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
 
         val lat = location?.latitude?.toString() ?: "0.0"
         val lng = location?.longitude?.toString() ?: "0.0"
-        val nisn = userPref.getNisn()
+        val id = userPref.getId()
         val apiKey = userPref.getApiKey()
 
         val body = mapOf(
-            "nisn" to nisn,
+
             "lat" to lat,
             "long" to lng,
-            "app_key" to "asdjsandkjasvfamd",
+            "app_key" to appKey,
             "token_key" to apiKey
         )
 
         try {
             // Logika pemilihan endpoint API
             val response = if (isDatang) {
-                RetrofitClient.api.absenDatang(nisn, body)
+                RetrofitClient.api.absenDatang(id, body)
             } else {
-                RetrofitClient.api.absenPulang(nisn, body)
+                RetrofitClient.api.absenPulang(id, body)
             }
 
             if (response.isSuccessful && response.body() != null) {

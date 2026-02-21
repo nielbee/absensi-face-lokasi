@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.absensi.databinding.FragmentNotificationsBinding
@@ -36,16 +35,14 @@ class NotificationsFragment : Fragment() {
             .get(NotificationsViewModel::class.java)
 
         // 4️⃣ Observe LiveData
-        viewModel.studentName.observe(viewLifecycleOwner) {
+        viewModel.name.observe(viewLifecycleOwner) {
             binding.textStudentName.text = it
         }
 
-        viewModel.studentNisn.observe(viewLifecycleOwner) {
+        viewModel.id.observe(viewLifecycleOwner) {
             binding.textStudentNisn.text = it
         }
-        viewModel.studentClas.observe(viewLifecycleOwner) {
-            binding.textStudentClas.text = it
-        }
+
 
 
         return binding.root

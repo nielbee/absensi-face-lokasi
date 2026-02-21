@@ -96,15 +96,15 @@ class FaceVerifyActivity : AppCompatActivity() {
     }
 
     private fun verifyFace(currentEmbedding: FloatArray) {
-        val nisn = userPref.getNisn()
+        val id = userPref.getId()
 
-        if (nisn.isEmpty()) {
-            Toast.makeText(this, "NISN tidak ditemukan", Toast.LENGTH_SHORT).show()
+        if (id.isEmpty()) {
+            Toast.makeText(this, "ID tidak ditemukan", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
 
-        val savedEmbedding = facePref.getFace(nisn)
+        val savedEmbedding = facePref.getFace(id)
 
         if (savedEmbedding == null) {
             Toast.makeText(this, "Wajah belum terdaftar", Toast.LENGTH_SHORT).show()

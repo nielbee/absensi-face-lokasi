@@ -111,7 +111,7 @@ private val requestCameraPermission = registerForActivityResult(
 
 
 private fun saveFaceAndLogin(embedding: FloatArray) {
-    val nisn = userPref.getNisn()
+    val nisn = userPref.getId()
     if (nisn.isEmpty()) {
         Toast.makeText(this, "NISN tidak tersedia", Toast.LENGTH_SHORT).show()
         return
