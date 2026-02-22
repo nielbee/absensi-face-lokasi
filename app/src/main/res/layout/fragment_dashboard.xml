@@ -52,38 +52,38 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="265dp"
         android:layout_gravity="bottom"
         android:layout_marginBottom="20dp"
-        android:padding="16dp"
         android:orientation="horizontal"
+        android:padding="16dp"
         android:weightSum="2">
 
         <Button
             android:id="@+id/btnAbsenDatang"
             android:layout_width="0dp"
             android:layout_height="56dp"
-            android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:text="DATANG"
-            android:textSize="14sp"
-            android:textStyle="bold"
+            android:layout_weight="1"
             android:backgroundTint="@color/teal_200"
+            android:enabled="false"
+            android:text="DATANG"
             android:textColor="@android:color/white"
-            android:enabled="false" />
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/btnAbsenPulang"
             android:layout_width="0dp"
             android:layout_height="56dp"
-            android:layout_weight="1"
             android:layout_marginStart="8dp"
-            android:text="PULANG"
-            android:textSize="14sp"
-            android:textStyle="bold"
+            android:layout_weight="1"
             android:backgroundTint="@color/teal_200"
+            android:enabled="false"
+            android:text="PULANG"
             android:textColor="@android:color/white"
-            android:enabled="false" />
+            android:textSize="14sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </FrameLayout>

@@ -6,3 +6,10 @@
 - Root Device Check
 - API diganti ke punya guru
 - APP key dipindah ke local.properties
+- Otomatis Redirect ke dashboard jika pernah Login
+
+
+
+## Need FIX :
+
+- Tombol datang dan pulang belum bisa ditekan??

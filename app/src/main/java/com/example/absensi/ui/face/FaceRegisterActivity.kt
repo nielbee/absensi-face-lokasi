@@ -111,24 +111,23 @@ private val requestCameraPermission = registerForActivityResult(
 
 
 private fun saveFaceAndLogin(embedding: FloatArray) {
-    val nisn = userPref.getId()
-    if (nisn.isEmpty()) {
+    val id_guru = userPref.getId()
+    if (id_guru.isEmpty()) {
         Toast.makeText(this, "NISN tidak tersedia", Toast.LENGTH_SHORT).show()
         return
     }
 
     // 1️⃣ Simpan wajah
-    facePref.saveFace(nisn, embedding)
-
+    facePref.saveFace(id_guru, embedding)
+    userPref.saveLogin(id_guru)
     // 2️⃣ Popup sukses
     Toast.makeText(this, "✅ Wajah berhasil terdaftar", Toast.LENGTH_SHORT).show()
-
     // 3️⃣ Delay 2 detik → login otomatis
     lifecycleScope.launch {
         kotlinx.coroutines.delay(2000)
 
         loginViewModel.loginOtomatisLangsung(
-            nisn,
+            id_guru,
             onDone = { loginResponse ->
                 // Bisa pakai loginResponse jika perlu
                 startActivity(Intent(this@FaceRegisterActivity, MainActivity::class.java))

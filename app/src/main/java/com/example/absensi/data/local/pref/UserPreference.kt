@@ -11,7 +11,7 @@ class UserPreference(context: Context) {
     companion object{
         private const val id_guru = "id_guru"
         private const val nama = "nama"
-        private const val id_jurusan = "id_jurusan"
+      
 
         private const val api_key = "api_key"
     }
