@@ -11,5 +11,6 @@
 
 
 ## Need FIX :
-
-~~ - Tombol datang dan pulang belum bisa ditekan??~~ FIXED
+-output dari server dibuat rapih 
+-optional : tidak usah senyum pas verifikasi wajah, cukuk kedip saja
+~~-Tombol datang dan pulang belum bisa ditekan??   FIXED~~
