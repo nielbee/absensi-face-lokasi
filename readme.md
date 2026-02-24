@@ -12,4 +12,4 @@
 
 ## Need FIX :
 
-- Tombol datang dan pulang belum bisa ditekan??
+~~ - Tombol datang dan pulang belum bisa ditekan??~~ FIXED

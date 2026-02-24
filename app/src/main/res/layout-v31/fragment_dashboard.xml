@@ -13,12 +13,14 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#44000000" />
+        android:background="#44000000"
+        android:clickable="false"
+        android:focusable="false" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:layout_marginBottom="30dp"
         android:padding="24dp">
 
         <Button

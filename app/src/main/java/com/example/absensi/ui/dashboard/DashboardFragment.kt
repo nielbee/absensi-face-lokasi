@@ -1,6 +1,5 @@
 package com.example.absensi.ui.dashboard
 
-import ai.onnxruntime.BuildConfig
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
@@ -44,6 +43,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import com.google.gson.Gson
 
 class DashboardFragment : Fragment(), OnMapReadyCallback {
 
@@ -59,17 +59,8 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
     private var faceAnalyzer: FaceAnalyzer? = null
 
     private var isFaceMatched = false
-    private var isLocationMatch = false
 
-
-//    val appKey = "asdjsandkjasvfa"  // need to access from secure place
     val appKey = AppConf.APP_KEY
-
-    companion object {
-        private const val SEKOLAH_LAT = -8.47240444613784
-        private const val SEKOLAH_LNG = 119.89182673243097
-        private const val RADIUS_MAKSIMAL = 100.0
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -122,32 +113,14 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
-        checkLocationStatus()
+        updateCurrentLocation()
     }
 
-    private fun checkLocationStatus() {
+    private fun updateCurrentLocation() {
         lifecycleScope.launch {
             try {
                 val loc: Location? = fusedLocationClient.getCurrentLocationSuspend(requireContext())
                 showCurrentLocationOnMap(loc)
-
-                loc?.let { location ->
-                    val results = FloatArray(1)
-                    Location.distanceBetween(
-                        location.latitude,
-                        location.longitude,
-                        SEKOLAH_LAT,
-                        SEKOLAH_LNG,
-                        results
-                    )
-                    val distance = results[0]
-
-                    isLocationMatch = distance <= RADIUS_MAKSIMAL
-                    if (!isLocationMatch) {
-                        binding.tvStatus.text = "📍 Di luar radius sekolah"
-                    }
-                    updateAbsenButton(isFaceMatched && isLocationMatch)
-                }
             } catch (e: Exception) {
                 Log.e("LOKASI_CHECK", "Error: ${e.message}")
             }
@@ -207,16 +180,15 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
 
         if (savedEmbedding != null) {
             val score = facePref.calculateSimilarity(currentEmbedding, savedEmbedding)
-            Log.d("FACE_SCORE", "Skor Kemiripan (Angka): $score")
+            Log.d("FACE_SCORE", "Skor Kemiripan: $score")
 
-            // Menggunakan threshold 0.45 agar lebih akurat namun tetap user-friendly
             val isMatched = facePref.isFaceMatch(currentEmbedding, savedEmbedding, 0.45f)
 
             if (isMatched) {
                 binding.tvStatus?.text = "✅ Wajah Cocok (${String.format("%.2f", score)})"
                 binding.tvStatus?.setBackgroundResource(R.drawable.bg_status_badege_success)
                 isFaceMatched = true
-                updateAbsenButton(isFaceMatched && isLocationMatch)
+                updateAbsenButton(true)
             } else {
                 binding.tvStatus?.text = "❌ Tidak Cocok (${String.format("%.2f", score)})"
                 isFaceMatched = false
@@ -236,13 +208,11 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
         val color = if (enabled) R.color.teal_700 else R.color.teal_200
         val colorStateList = ContextCompat.getColorStateList(requireContext(), color)
 
-        // Update tombol Datang
         binding.btnAbsenDatang?.apply {
             isEnabled = enabled
             backgroundTintList = colorStateList
         }
 
-        // Update tombol Pulang
         binding.btnAbsenPulang?.apply {
             isEnabled = enabled
             backgroundTintList = colorStateList
@@ -251,21 +221,18 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
 
     @RequiresApi(Build.VERSION_CODES.S)
     private fun setupAbsenButton() {
-        // Tombol Datang
         binding.btnAbsenDatang?.setOnClickListener {
             lifecycleScope.launch(Dispatchers.Main) {
                 sendAbsen(isDatang = true)
             }
         }
 
-        // Tombol Pulang
         binding.btnAbsenPulang?.setOnClickListener {
             lifecycleScope.launch(Dispatchers.Main) {
                 sendAbsen(isDatang = false)
             }
         }
     }
-
 
     @RequiresApi(Build.VERSION_CODES.S)
     private suspend fun sendAbsen(isDatang: Boolean) {
@@ -275,20 +242,19 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
             null
         }
 
-        // cek mock location :
-        if(location?.isMock == true){
-            Toast.makeText(requireContext(), "Mock Location Detected", Toast.LENGTH_SHORT).show()
+        if (location?.isMock == true) {
+            Toast.makeText(requireContext(), "Mock Location Terdeteksi", Toast.LENGTH_SHORT).show()
             return
         }
-
 
         val lat = location?.latitude?.toString() ?: "0.0"
         val lng = location?.longitude?.toString() ?: "0.0"
         val id = userPref.getId()
         val apiKey = userPref.getApiKey()
 
-        val body = mapOf(
+        Log.d("ABSEN_DEBUG", "ID: $id, API_KEY: $apiKey, APP_KEY: $appKey")
 
+        val body = mapOf(
             "lat" to lat,
             "long" to lng,
             "app_key" to appKey,
@@ -296,7 +262,6 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
         )
 
         try {
-            // Logika pemilihan endpoint API
             val response = if (isDatang) {
                 RetrofitClient.api.absenDatang(id, body)
             } else {
@@ -305,33 +270,40 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
 
             if (response.isSuccessful && response.body() != null) {
                 val res = response.body()
+                val rawJson = Gson().toJson(res)
+                binding.tvStatus?.text = rawJson
                 Toast.makeText(requireContext(), res?.msg, Toast.LENGTH_SHORT).show()
 
                 if (res?.status == "berhasil") {
-                    // Setelah sukses, kunci kembali tombol dan reset kamera
                     isFaceMatched = false
                     updateAbsenButton(false)
-                    faceAnalyzer?.reset()
-
-                    binding.tvStatus?.text = "Mencari Wajah..."
-                    binding.tvStatus?.setBackgroundResource(R.drawable.bg_status_badge)
+                    lifecycleScope.launch {
+                        delay(5000)
+                        faceAnalyzer?.reset()
+                        binding.tvStatus?.text = "Mencari Wajah..."
+                        binding.tvStatus?.setBackgroundResource(R.drawable.bg_status_badge)
+                    }
                 } else {
                     faceAnalyzer?.reset()
                 }
             } else {
-                Toast.makeText(requireContext(), "Gagal: ${response.message()}", Toast.LENGTH_SHORT)
-                    .show()
+                val errorBody = response.errorBody()?.string() ?: "No error body"
+                val errorMsg = "HTTP ${response.code()}: $errorBody"
+                Log.e("ABSEN_ERROR", errorMsg)
+                binding.tvStatus?.text = errorMsg
+                Toast.makeText(requireContext(), "Gagal: ${errorBody}", Toast.LENGTH_LONG).show()
                 faceAnalyzer?.reset()
             }
         } catch (e: Exception) {
-            Log.e("ABSEN_ERROR", "Error: ${e.message}")
+            val errorMsg = "Exception: ${e.message}"
+            Log.e("ABSEN_ERROR", errorMsg, e)
+            binding.tvStatus?.text = errorMsg
             Toast.makeText(requireContext(), "Koneksi Error", Toast.LENGTH_SHORT).show()
             faceAnalyzer?.reset()
         }
     }
 }
 
-// Extension Function dipindah ke level top-level (di luar class DashboardFragment)
 suspend fun FusedLocationProviderClient.getCurrentLocationSuspend(context: Context): Location? {
     if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         throw SecurityException("Location permission not granted")
