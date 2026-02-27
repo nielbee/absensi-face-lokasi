@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">absensi</string>
+    <string name="app_name">presensi</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Absensi</string>
+    <string name="title_dashboard">Presensi</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_login">Login</string>
     <string name="title_register">Register</string>

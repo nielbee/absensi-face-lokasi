@@ -7,10 +7,10 @@
 - API diganti ke punya guru
 - APP key dipindah ke local.properties
 - Otomatis Redirect ke dashboard jika pernah Login
+- fitur ijin ditambah
+- fitur lihat detail Presensi ditambah
 
 
 
 ## Need FIX :
--output dari server dibuat rapih 
--optional : tidak usah senyum pas verifikasi wajah, cukuk kedip saja
-~~-Tombol datang dan pulang belum bisa ditekan??   FIXED~~
+~~absensi jadi presensi~~   

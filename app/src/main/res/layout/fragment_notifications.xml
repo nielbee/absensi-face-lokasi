@@ -76,44 +76,21 @@
                 app:cardElevation="4dp">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="12dp">
 
                     <!-- Baris Kelas -->
-                    <LinearLayout
+
+                    <EditText
+                        android:id="@+id/text_ijin"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingVertical="12dp">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_dashboard_black_24dp"
-                            app:tint="#5C6BC0" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_weight="1"
-                            android:text="Kelas"
-                            android:textColor="@color/black"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/textStudentClas"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="sans-serif-medium"
-                            android:text="XII RPL 1"
-                            android:textColor="@color/black"
-                            android:textSize="16sp" />
-                    </LinearLayout>
+                        android:layout_height="match_parent"
+                        android:ems="10"
+                        android:gravity="start|top"
+                        android:inputType="textMultiLine" />
 
                     <View
                         android:layout_width="match_parent"
@@ -121,37 +98,6 @@
                         android:background="#EEEEEE" />
 
                     <!-- Baris Email -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingVertical="12dp">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_notifications_black_24dp"
-                            app:tint="#42A5F5" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_weight="1"
-                            android:text="Email"
-                            android:textColor="@color/black"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/text_email"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="sans-serif-medium"
-                            android:text="jadenb@email.com"
-                            android:textColor="@color/black"
-                            android:textSize="16sp" />
-                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -159,12 +105,12 @@
 
             <!-- Tombol Logout -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_logout"
+                android:id="@+id/button_ijin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:padding="14dp"
-                android:text="Logout"
+                android:text="Ijin"
                 android:textAllCaps="false"
                 android:textSize="16sp"
                 app:backgroundTint="#E53935"

@@ -272,7 +272,7 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
                 val res = response.body()
                 val rawJson = Gson().toJson(res)
                 binding.tvStatus?.text = rawJson
-                Toast.makeText(requireContext(), res?.msg, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), rawJson, Toast.LENGTH_LONG).show()
 
                 if (res?.status == "berhasil") {
                     isFaceMatched = false
@@ -291,14 +291,14 @@ class DashboardFragment : Fragment(), OnMapReadyCallback {
                 val errorMsg = "HTTP ${response.code()}: $errorBody"
                 Log.e("ABSEN_ERROR", errorMsg)
                 binding.tvStatus?.text = errorMsg
-                Toast.makeText(requireContext(), "Gagal: ${errorBody}", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_LONG).show()
                 faceAnalyzer?.reset()
             }
         } catch (e: Exception) {
             val errorMsg = "Exception: ${e.message}"
             Log.e("ABSEN_ERROR", errorMsg, e)
             binding.tvStatus?.text = errorMsg
-            Toast.makeText(requireContext(), "Koneksi Error", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_LONG).show()
             faceAnalyzer?.reset()
         }
     }
